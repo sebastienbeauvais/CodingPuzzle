@@ -1,8 +1,12 @@
 using System;
 
-namespace StringManipulation;
+namespace StringPuzzle;
 
-public class DefaultFormatter
+public class DefaultFormatter : IFormatter
 {
-
+    public void FormatString(string inputString)
+    {
+        // Do something
+        
+    }
 }

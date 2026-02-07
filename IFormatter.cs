@@ -1,8 +1,9 @@
 using System;
 
-namespace StringManipulation;
+namespace StringPuzzle;
 
-public class Formatter
+internal interface IFormatter
 {
-
+    void FormatString(string inputString);
+    
 }

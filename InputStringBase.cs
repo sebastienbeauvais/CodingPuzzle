@@ -1,8 +1,8 @@
 using System;
 
-namespace StringManipulation;
+namespace StringPuzzle;
 
-public class InputStringBase
+internal class InputStringBase
 {
-
+    internal const string baseString = "(id, name, email, type(id, name, customFields(c1, c2, c3)), externalId)";
 }

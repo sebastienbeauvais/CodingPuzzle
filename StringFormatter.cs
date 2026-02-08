@@ -24,6 +24,10 @@ internal class StringFormatter
         {
             FormatBasedOnSelection(userInput);
         }
+        else if(userInput == "3")
+        {
+            throw new NotImplementedException();
+        }
         else
         {
             Console.WriteLine("Exiting program");

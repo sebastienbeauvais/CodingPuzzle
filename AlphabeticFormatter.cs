@@ -55,7 +55,7 @@ public class AlphabeticFormatter : IFormatter
             }
             else if(characterIdx > 0 && characterIdx < word.Length && character == StringFormatter.leftParen)
             {
-                HandleLeftParen(indentationLevel, word, cleanedWord);
+                return HandleLeftParen(indentationLevel, word, cleanedWord);
             }
             else if(word.Contains(StringFormatter.rightParen) && characterIdx == word.Length-1)
             {

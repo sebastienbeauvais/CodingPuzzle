@@ -6,13 +6,13 @@ namespace StringPuzzle;
 internal class StringFormatter
 {
     // Characters we will need to clean from the string
-    private readonly char leftParen = '(';
-    private readonly char rightParen = ')';
-    private readonly char comma = ','; 
+    internal const char leftParen = '(';
+    internal const char rightParen = ')';
+    internal const char comma = ','; 
 
     // Characters we need to add to the formatting
-    private readonly char dash = '-';
-    private readonly char spaceCharacter = ' ';
+    internal const char dash = '-';
+    internal const char spaceCharacter = ' ';
     internal void FormatOutput(string userInput)
     {
 

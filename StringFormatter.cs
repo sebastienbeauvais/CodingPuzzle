@@ -24,6 +24,10 @@ internal class StringFormatter
         {
             FormatBasedOnSelection(userInput);
         }
+        else if(userInput == "3")
+        {
+            FormatBasedOnSelection(userInput);
+        }
         else
         {
             Console.WriteLine("Exiting program");
@@ -31,6 +35,7 @@ internal class StringFormatter
     }
     private void FormatBasedOnSelection(string userInput)
     {
+        // Add option 3 but how?
         IFormatter formatter = userInput == "1" ? new DefaultFormatter() : userInput == "2" ? new AlphabeticFormatter() : throw new InvalidDataException();
         var context = new Context();
         context.SetStrategy(formatter);

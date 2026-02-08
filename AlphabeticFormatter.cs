@@ -47,12 +47,7 @@ public class AlphabeticFormatter : IFormatter
             }
             else if(character == StringFormatter.rightParen)
             {
-                // Bug that is happening
-                    // We have a stirng with multiple ")". We are setting the tempIndentation and then calling indentation-- (which is what we use to set the tempIndentation)
-                    // We then loop again and accidentally decrement tempIndentation
-                    // This results in the nested word printing out at the wrong level
-                tempIndentation = HandleRightParen(indentationLevel, characterIdx, word, cleanedWord);
-                indentationLevel--;
+                indentationLevel = HandleRightParen(characterIdx, word, indentationLevel, cleanedWord);
             }
             else if(character == StringFormatter.comma)
             {
@@ -62,7 +57,7 @@ public class AlphabeticFormatter : IFormatter
             {
                 HandleLeftParen(indentationLevel, word, cleanedWord);
             }
-            else if(word.Contains(')') && characterIdx == word.Length)
+            else if(word.Contains(StringFormatter.rightParen) && characterIdx == word.Length-1)
             {
                 return (indentationLevel, string.Join("", cleanedWord.ToArray()));
             }
@@ -81,7 +76,24 @@ public class AlphabeticFormatter : IFormatter
         return (indentationLevel, string.Join("", cleanedWord.ToArray()));
         
     }
-    private int HandleRightParen(int indentationLevel, int characterIdx, string word, List<char> cleanedWord)
+    private int HandleRightParen(int characterIdx, string word, int indentationLevel, List<char> cleanedWord)
+    {
+        bool isLastRightParen = characterIdx == word.Length -1 || word[characterIdx + 1] != StringFormatter.rightParen;
+        if (isLastRightParen)
+        {
+            int count = 0;
+            int i = characterIdx;
+            while (i >= 0 && word[i] == StringFormatter.rightParen)
+            {
+                count++;
+                i--;
+            }
+            tempIndentation = GetTempIndentation(indentationLevel, characterIdx, word, cleanedWord);
+            indentationLevel -= count;
+        }
+        return indentationLevel;
+    }
+    private int GetTempIndentation(int indentationLevel, int characterIdx, string word, List<char> cleanedWord)
     {
         if(characterIdx < word.Length)
         {

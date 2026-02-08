@@ -11,11 +11,7 @@ public class AlphabeticFormatter : IFormatter
     internal int tempIndentation = -1;
     public void FormatString(string inputString)
     {
-        // Current idea is to parse the input string and build a List<Tuple> where the first value in the tuple
-        // is the index level and the second value in the tuple is the word to print.
-        // We should then be able to sort by index level ASC then word asc and print the output
         var wordsWithIndentationLevel = new List<(int, string)>();
-        // Do something similar to Default Formatter but instead of printing out the word we return a tuple (int, string)?
         int indentationLevel = -1;
         foreach (string word in inputString.Split())
         {
@@ -47,12 +43,15 @@ public class AlphabeticFormatter : IFormatter
             characterIdx++;
             if(character == StringFormatter.leftParen && characterIdx == 0)
             {
-                //var output = HandleLeftParen(character, characterIdx, word, cleanedWord); // Update to meaningful variable name
                 indentationLevel++;
             }
             else if(character == StringFormatter.rightParen)
             {
-                tempIndentation = HandleRightParen(character, characterIdx, word, cleanedWord);
+                // Bug that is happening
+                    // We have a stirng with multiple ")". We are setting the tempIndentation and then calling indentation-- (which is what we use to set the tempIndentation)
+                    // We then loop again and accidentally decrement tempIndentation
+                    // This results in the nested word printing out at the wrong level
+                tempIndentation = HandleRightParen(indentationLevel, characterIdx, word, cleanedWord);
                 indentationLevel--;
             }
             else if(character == StringFormatter.comma)
@@ -61,13 +60,7 @@ public class AlphabeticFormatter : IFormatter
             }
             else if(characterIdx > 0 && characterIdx < word.Length && character == StringFormatter.leftParen)
             {
-                // this condition will handle when we land on a left paren and it is not the end of the word
-                // add the second word to the nestedWords tuple and process after
-                // THIS WILL BE MOVED TO HandleLeftParen()
-                int incrementCurrentIndentationLevel = indentationLevel+1; 
-                nestedWord = (incrementCurrentIndentationLevel, word.Split('(').LastOrDefault()); 
-                // return the current cleand word
-                return (indentationLevel, string.Join("", cleanedWord.ToArray()));
+                HandleLeftParen(indentationLevel, word, cleanedWord);
             }
             else if(word.Contains(')') && characterIdx == word.Length)
             {
@@ -80,22 +73,12 @@ public class AlphabeticFormatter : IFormatter
         }
         return (indentationLevel, string.Join("", cleanedWord.ToArray()));
     }
-    private string? HandleLeftParen(char character, int characterIdx, string word, List<char> cleanedWord)
+    private (int, string) HandleLeftParen(int indentationLevel, string word, List<char> cleanedWord)
     {
-        // This is the case where we want to build our word earlier than the end of the string
-        string earlyWord = string.Empty;
-        if(characterIdx < word.Length && characterIdx > 0)
-        {
-            earlyWord = BuildWord(cleanedWord);
-            // Still need to handle when we have more characters after 
-            // We can store the words for later (duh!!)
-                // What we know
-                // We hit a left paren in the middle of the word so we need to increment the indentation level for these element
-                // We have the current indentation level in the method calling this one
-                // We could store it and every word that lands in the additional collection we increment the indentation level by 1
-            var secondWord = word.Split('(').LastOrDefault();
-        }
-        return earlyWord != string.Empty ? earlyWord : null;
+        int incrementCurrentIndentationLevel = indentationLevel+1; 
+        nestedWord = (incrementCurrentIndentationLevel, word.Split('(').Last()); 
+        // return the current cleand word
+        return (indentationLevel, string.Join("", cleanedWord.ToArray()));
         
     }
     private int HandleRightParen(int indentationLevel, int characterIdx, string word, List<char> cleanedWord)
